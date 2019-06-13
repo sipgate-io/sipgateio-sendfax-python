@@ -1,6 +1,6 @@
 <img src="https://www.sipgatedesign.com/wp-content/uploads/wort-bildmarke_positiv_2x.jpg" alt="sipgate logo" title="sipgate" align="right" height="112" width="200"/>
 
-# sipgate.io Node.js send fax example
+# sipgate.io Python send fax example
 
 To demonstrate how to send an Fax, we queried the `/sessions/fax` endpoint of the sipgate REST API.
 
