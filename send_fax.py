@@ -74,6 +74,12 @@ def send_fax(encoded_pdf, pdf_filename, recipient, authorization):
                              headers=headers,
                              json=request_body,
                              auth=authorization)
+    status_code = response.status_code
+    if not status_code == 200:
+        sys.stderr.write('An error occurred while communicating with the sipgate REST API: ')
+        sys.stderr.write('status code {} (see README for details)'.format(status_code))
+        exit(5)
+
     response_body = response.json()
     session_id = response_body['sessionId']
     return session_id
