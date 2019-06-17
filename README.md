@@ -6,12 +6,22 @@ To demonstrate how to send an Fax, we queried the `/sessions/fax` endpoint of th
 
 For further information regarding the sipgate REST API please visit https://api.sipgate.com/v2/doc
 
+- [Prerequisites](#Prerequisites)
+- [How To Use](#How-To-Use)
+- [Configuration](#Configuration)
+- [How It Works](#How-It-Works)
+- [Fax Extensions](#Fax-Extensions)
+- [Common Issues](#Common-Issues)
+- [Related](#Related)
+- [Contact Us](#Contact-Us)
+- [License](#License)
+- [External Libraries](#External-Libraries)
 
 ## Prerequisites
 - python3
 - pip3
 
-### How To Use
+## How To Use
 
 Install dependencies:
 ```bash
@@ -35,6 +45,7 @@ Run the application:
 ```bash
 python3 send_fax.py <RECIPIENT> <PDF_DOCUMENT>
 ```
+**Note:** Although the API accepts various formats of fax numbers the recommended format for the `RECIPIENT` is the [E.164 standard](https://en.wikipedia.org/wiki/E.164).
 
 ## How It Works
 
@@ -151,7 +162,7 @@ The `faxStatusType` can contain the following values:
 - `SENT`: The fax was sent successfully
 - `SCHEDULED`: The fax is scheduled for sending at the specified timestamp (it is not `PENDING` because it is not waiting in the queue of faxes to be sent yet)
 
-### Fax Extensions
+## Fax Extensions
 
 A fax extension consists of the letter 'f' followed by a number (e.g. 'f0'). The sipgate API uses the concept of fax extensions to identify devices within your account that are enabled to send fax. In this context the term 'device' does not necessarily refer to a hardware fax but rather a virtual representation.
 
@@ -162,9 +173,9 @@ You can find out what your extension is as follows:
 3. Click **Fax** 
 4. The URL of the page should have the form `https://app.sipgate.com/{...}/connections/faxlines/{faxlineId}` where `{faxlineId}` is your Fax extension.
 
-### Common Issues
+## Common Issues
 
-#### Fax added to the sending queue, but sending failed
+### Fax added to the sending queue, but sending failed
 
 Possible reasons are:
 
@@ -172,7 +183,7 @@ Possible reasons are:
 - PDF file with text fields or forms are not supported
 - PDF file is corrupt
 
-#### HTTP Errors
+### HTTP Errors
 
 | reason                                                                                                                                                | errorcode |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------- | :-------: |
@@ -186,21 +197,21 @@ Possible reasons are:
 | wrong or missing `Content-Type` header with `application/json`                                                                                        |    415    |
 | internal server error or unhandled bad request                                                                                 |    500    |
 
-### Related
+## Related
 
 - [requests documentation](http://docs.python-requests.org/en/master/)
 - [base64 documentation](https://docs.python.org/3/library/base64.html)
 
-### Contact Us
+## Contact Us
 
 Please let us know how we can improve this example.
 If you have a specific feature request or found a bug, please use **Issues** or fork this repository and send a **pull request** with your improvements.
 
-### License
+## License
 
 This project is licensed under **The Unlicense** (see [LICENSE file](./LICENSE)).
 
-### External Libraries
+## External Libraries
 This code uses the following external libraries
 
 - requests:  

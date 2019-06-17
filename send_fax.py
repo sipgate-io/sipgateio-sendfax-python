@@ -80,10 +80,13 @@ def send_fax(encoded_pdf, pdf_filename, recipient, authorization):
 
 
 def poll_send_status(session_id, authorization):
+    url = '{}/history/{}'.format(config['baseUrl'], session_id)
     headers = {
         'Content-Type': 'application/json'
     }
-    response = requests.get('{}/history/{}'.format(config['baseUrl'], session_id), headers=headers, auth=authorization)
+    response = requests.get(url,
+                            headers=headers,
+                            auth=authorization)
     response_body = response.json()
     return response_body['faxStatusType']
 
