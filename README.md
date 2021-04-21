@@ -6,16 +6,19 @@ To demonstrate how to send an Fax, we queried the `/sessions/fax` endpoint of th
 
 For further information regarding the sipgate REST API please visit https://api.sipgate.com/v2/doc
 
-- [Prerequisites](#Prerequisites)
-- [How To Use](#How-To-Use)
-- [Configuration](#Configuration)
-- [How It Works](#How-It-Works)
-- [Fax Extensions](#Fax-Extensions)
-- [Common Issues](#Common-Issues)
-- [Related](#Related)
-- [Contact Us](#Contact-Us)
-- [License](#License)
-- [External Libraries](#External-Libraries)
+- [sipgate.io Python send fax example](#sipgateio-python-send-fax-example)
+  - [Prerequisites](#prerequisites)
+  - [How To Use](#how-to-use)
+  - [Configuration](#configuration)
+  - [How It Works](#how-it-works)
+  - [Fax Extensions](#fax-extensions)
+  - [Common Issues](#common-issues)
+    - [Fax added to the sending queue, but sending failed](#fax-added-to-the-sending-queue-but-sending-failed)
+    - [HTTP Errors](#http-errors)
+  - [Related](#related)
+  - [Contact Us](#contact-us)
+  - [License](#license)
+  - [External Libraries](#external-libraries)
 
 ## Prerequisites
 - python3
@@ -38,6 +41,10 @@ In the [config.json](./config.json) file located in the project root directory i
 "faxlineId": "YOUR_SIPGATE_FAXLINE_EXTENSION",
 ...
 ```
+
+The token should have the `session:fax:write` scope.
+For more information about personal access tokens visit our [website.](https://www.sipgate.io/rest-api/authentication#personalAccessToken)
+
 The `faxlineId` uniquely identifies the extension from which you wish to send your fax. Further explanation is given in the section [Fax Extensions](#fax-extensions).
 
 Run the application:
