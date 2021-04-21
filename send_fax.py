@@ -12,7 +12,7 @@ FAX_NUMBER_PATTERN = r'\+?\d+'
 
 
 def main():
-    authorization = requests.auth.HTTPBasicAuth(config['username'], config['password'])
+    authorization = requests.auth.HTTPBasicAuth(config['tokenId'], config['token'])
     pdf_filepath, recipient = validate_commandline_arguments()
 
     with open(pdf_filepath, 'rb') as pdf_file:

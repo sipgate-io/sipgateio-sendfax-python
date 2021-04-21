@@ -29,12 +29,12 @@ $ pip3 install -r requirements.txt
 ```
 
 ## Configuration
-In the [config.json](./config.json) file located in the project root directory insert `YOUR_SIPGATE_USERNAME`, `YOUR_SIPGATE_PASSWORD`, and `YOUR_SIPGATE_FAXLINE_EXTENSION`:
+In the [config.json](./config.json) file located in the project root directory insert `YOUR_SIPGATE_TOKEN_ID`, `YOUR_SIPGATE_TOKEN`, and `YOUR_SIPGATE_FAXLINE_EXTENSION`:
 
 ```json
 ...
-"username": "YOUR_SIPGATE_USERNAME",
-"password": "YOUR_SIPGATE_PASSWORD",
+"tokenId": "YOUR_SIPGATE_TOKEN_ID",
+"token": "YOUR_SIPGATE_TOKEN",
 "faxlineId": "YOUR_SIPGATE_FAXLINE_EXTENSION",
 ...
 ```
@@ -188,7 +188,7 @@ Possible reasons are:
 | reason                                                                                                                                                | errorcode |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------- | :-------: |
 | bad request (e.g. request body fields are empty or only contain spaces, timestamp is invalid etc.)                                                    |    400    |
-| username and/or password are wrong                                                                                                                    |    401    |
+| tokenId and/or token are wrong                                                                                                                    |    401    |
 | your account balance is insufficient                                                                                                                  |    402    |
 | no permission to use specified Fax extension (e.g. Fax feature not booked or user password must be reset in [web app](https://app.sipgate.com/login)) |    403    |
 | wrong REST API endpoint                                                                                                                               |    404    |
