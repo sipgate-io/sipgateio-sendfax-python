@@ -68,8 +68,9 @@ def send_fax(encoded_pdf, pdf_filename, recipient, authorization):
         'faxlineId': config['faxlineId'],
         'recipient': recipient,
         'filename': pdf_filename,
-        'base64Content': encoded_pdf
+        'base64Content': encoded_pdf.decode("utf-8")
     }
+
     response = requests.post(url,
                              headers=headers,
                              json=request_body,
