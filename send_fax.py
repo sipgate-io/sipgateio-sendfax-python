@@ -5,14 +5,21 @@ import os
 import re
 import sys
 import time
-
+from os.path import join, dirname
+from dotenv import load_dotenv
 import requests
 
-FAX_NUMBER_PATTERN = r'\+?\d+'
+load_dotenv()
 
+token = os.environ.get("token")
+tokenId = os.environ.get("tokenId")
+faxlineId = os.environ.get("faxlineId")
+
+FAX_NUMBER_PATTERN = r'\+?\d+'
+baseUrl = "https://api.sipgate.com/v2"
 
 def main():
-    authorization = requests.auth.HTTPBasicAuth(config['tokenId'], config['token'])
+    authorization = requests.auth.HTTPBasicAuth(tokenId, token)
     pdf_filepath, recipient = validate_commandline_arguments()
 
     with open(pdf_filepath, 'rb') as pdf_file:
@@ -28,11 +35,6 @@ def main():
         send_status = poll_send_status(session_id, authorization)
         time.sleep(5)
     print(send_status)
-
-
-def load_config():
-    with open('config.json') as config_file:
-        return json.load(config_file)
 
 
 def validate_commandline_arguments():
@@ -60,12 +62,12 @@ def validate_commandline_arguments():
 
 
 def send_fax(encoded_pdf, pdf_filename, recipient, authorization):
-    url = config['baseUrl'] + '/sessions/fax'
+    url = baseUrl + '/sessions/fax'
     headers = {
         'Content-Type': 'application/json'
     }
     request_body = {
-        'faxlineId': config['faxlineId'],
+        'faxlineId': faxlineId,
         'recipient': recipient,
         'filename': pdf_filename,
         'base64Content': encoded_pdf.decode("utf-8")
@@ -87,7 +89,7 @@ def send_fax(encoded_pdf, pdf_filename, recipient, authorization):
 
 
 def poll_send_status(session_id, authorization):
-    url = '{}/history/{}'.format(config['baseUrl'], session_id)
+    url = '{}/history/{}'.format(baseUrl, session_id)
     headers = {
         'Content-Type': 'application/json'
     }
@@ -99,5 +101,4 @@ def poll_send_status(session_id, authorization):
 
 
 if __name__ == '__main__':
-    config = load_config()
     main()
