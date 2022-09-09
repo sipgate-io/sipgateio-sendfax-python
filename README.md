@@ -32,20 +32,20 @@ $ pip3 install -r requirements.txt
 ```
 
 ## Configuration
-In the [config.json](./config.json) file located in the project root directory insert `YOUR_SIPGATE_TOKEN_ID`, `YOUR_SIPGATE_TOKEN`, and `YOUR_SIPGATE_FAXLINE_EXTENSION`:
+In the [.env](./.env) file located in the project root directory insert `YOUR_SIPGATE_TOKEN_ID`, `YOUR_SIPGATE_TOKEN`, and `YOUR_SIPGATE_FAXLINE_EXTENSION`:
 
 ```json
 ...
-"tokenId": "YOUR_SIPGATE_TOKEN_ID",
-"token": "YOUR_SIPGATE_TOKEN",
-"faxlineId": "YOUR_SIPGATE_FAXLINE_EXTENSION",
+TOKEN_ID="YOUR_SIPGATE_TOKEN_ID",
+TOKEN="YOUR_SIPGATE_TOKEN",
+FAXLINE_ID="YOUR_SIPGATE_FAXLINE_EXTENSION",
 ...
 ```
 
-The token should have the `session:fax:write` scope.
+The TOKEN should have the `session:fax:write` scope.
 For more information about personal access tokens visit our [website.](https://www.sipgate.io/rest-api/authentication#personalAccessToken)
 
-The `faxlineId` uniquely identifies the extension from which you wish to send your fax. Further explanation is given in the section [Fax Extensions](#fax-extensions).
+The `FAXLINE_ID` uniquely identifies the extension from which you wish to send your fax. Further explanation is given in the section [Fax Extensions](#fax-extensions).
 
 Run the application:
 
@@ -194,16 +194,16 @@ Possible reasons are:
 ### HTTP Errors
 
 | reason                                                                                                                                                | errorcode |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------- | :-------: |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------| :-------: |
 | bad request (e.g. request body fields are empty or only contain spaces, timestamp is invalid etc.)                                                    |    400    |
-| tokenId and/or token are wrong                                                                                                                    |    401    |
+| TOKEN_ID and/or TOKEN are wrong                                                                                                                       |    401    |
 | your account balance is insufficient                                                                                                                  |    402    |
 | no permission to use specified Fax extension (e.g. Fax feature not booked or user password must be reset in [web app](https://app.sipgate.com/login)) |    403    |
 | wrong REST API endpoint                                                                                                                               |    404    |
 | wrong request method                                                                                                                                  |    405    |
-| invalid recipient fax number                                                                                                                                  |    407    |
+| invalid recipient fax number                                                                                                                          |    407    |
 | wrong or missing `Content-Type` header with `application/json`                                                                                        |    415    |
-| internal server error or unhandled bad request                                                                                 |    500    |
+| internal server error or unhandled bad request                                                                                                        |    500    |
 
 ## Related
 
@@ -223,8 +223,10 @@ This project is licensed under **The Unlicense** (see [LICENSE file](./LICENSE))
 This code uses the following external libraries
 
 - requests:  
-    - Licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)  
-    - Website: http://docs.python-requests.org/en/master/
+  - Licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)  
+  - Website: http://docs.python-requests.org/en/master/
+- python-dotenv
+  - Website: https://pypi.org/project/python-dotenv/
 ---
 
 [sipgate.io](https://www.sipgate.io) | [@sipgateio](https://twitter.com/sipgateio) | [API-doc](https://api.sipgate.com/v2/doc)

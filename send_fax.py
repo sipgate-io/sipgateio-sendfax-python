@@ -11,9 +11,9 @@ import requests
 
 load_dotenv()
 
-token = os.environ.get("token")
-tokenId = os.environ.get("tokenId")
-faxlineId = os.environ.get("faxlineId")
+token = os.environ.get("TOKEN")
+tokenId = os.environ.get("TOKEN_ID")
+faxlineId = os.environ.get("FAXLINE_ID")
 
 FAX_NUMBER_PATTERN = r'\+?\d+'
 baseUrl = "https://api.sipgate.com/v2"
