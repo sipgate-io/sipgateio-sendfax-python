@@ -42,7 +42,7 @@ FAXLINE_ID="YOUR_SIPGATE_FAXLINE_EXTENSION",
 ...
 ```
 
-The TOKEN should have the `session:fax:write` scope.
+The token must have the `sessions:fax:write` and `history:read` scopes.
 For more information about personal access tokens visit our [website.](https://www.sipgate.io/rest-api/authentication#personalAccessToken)
 
 The `FAXLINE_ID` uniquely identifies the extension from which you wish to send your fax. Further explanation is given in the section [Fax Extensions](#fax-extensions).
