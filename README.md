@@ -47,55 +47,45 @@ For more information about personal access tokens visit our [website.](https://w
 
 The `FAXLINE_ID` uniquely identifies the extension from which you wish to send your fax. Further explanation is given in the section [Fax Extensions](#fax-extensions).
 
+Although the API accepts various formats of fax numbers, the recommended format for the `RECIPIENT` is the [E.164 standard](https://en.wikipedia.org/wiki/E.164).
+
+`PDF_FILE_PATH` expects an either relative or absolute file path to your desired PDF file to be sent.
+
 Run the application:
 
 ```bash
-python3 send_fax.py <RECIPIENT> <PDF_DOCUMENT>
+python3 send_fax.py
 ```
-**Note:** Although the API accepts various formats of fax numbers the recommended format for the `RECIPIENT` is the [E.164 standard](https://en.wikipedia.org/wiki/E.164).
 
 ## How It Works
 
 In our main script, the send_fax.py, we check that the user provides the recipient phone number and a PDF, we also ensure that the mime-type of the file is `application/pdf`.
 
 ```python
-pdf_filepath, recipient = validate_commandline_arguments()
-```
+def validate_env_values():
+  if not re.match(FAX_NUMBER_PATTERN, RECIPIENT):
+    sys.stderr.write('Invalid recipient fax number.')
+    exit(2)
 
-```python
-def validate_commandline_arguments():
-    if len(sys.argv) < 3:
-        sys.stderr.write('Missing arguments.\n')
-        sys.stderr.write('Please pass the recipient fax number and the file path.')
-        exit(1)
+  if not os.path.isfile(PDF_FILE_PATH):
+    sys.stderr.write('File not found: {}'.format(PDF_FILE_PATH))
+    exit(3)
 
-    recipient = sys.argv[1]
-    if not re.match(FAX_NUMBER_PATTERN, recipient):
-        sys.stderr.write('Invalid recipient fax number.')
-        exit(2)
-
-    pdf_filepath = sys.argv[2]
-    if not os.path.isfile(pdf_filepath):
-        sys.stderr.write('File not found: {}'.format(pdf_filepath))
-        exit(3)
-
-    mimetype, encoding = mimetypes.guess_type(pdf_filepath)
-    if not mimetype == 'application/pdf':
-        sys.stderr.write('Invalid file type: {}'.format(mimetype))
-        exit(4)
-
-    return pdf_filepath, recipient
+  mimetype, encoding = mimetypes.guess_type(PDF_FILE_PATH)
+  if not mimetype == 'application/pdf':
+    sys.stderr.write('Invalid file type: {}'.format(mimetype))
+    exit(4)
 ```
 
 After that we read the file contents and encode it with Base64.
 ```python
-with open(pdf_filepath, 'rb') as pdf_file:
-	encoded_pdf = base64.b64encode(pdf_file.read())
+with open(PDF_FILE_PATH, 'rb') as pdf_file:
+  encoded_pdf = base64.b64encode(pdf_file.read())
 ```
 
 After that we call our `send_fax` function and pass the encoded_pdf, pdf_filename, recipient and authorization as arguments.
 ```python
-session_id = send_fax(encoded_pdf, pdf_filename, recipient, authorization)
+session_id = send_fax(encoded_pdf, pdf_filename, RECIPIENT, authorization)
 ```
 
 In the `send_fax` function, we define the headers and the request body, which contains the `faxlineId`, `recipient`, `filename`, and `base64Content`.
@@ -118,23 +108,30 @@ We use the python package 'requests' for request generation and execution. The `
 
 ```python
 def send_fax(encoded_pdf, pdf_filename, recipient, authorization):
-    url = config['baseUrl'] + '/sessions/fax'
-    headers = {
-        'Content-Type': 'application/json'
-    }
-    request_body = {
-        'faxlineId': config['faxlineId'],
-        'recipient': recipient,
-        'filename': pdf_filename,
-        'base64Content': encoded_pdf
-    }
-    response = requests.post(url,
-                             headers=headers,
-                             json=request_body,
-                             auth=authorization)
-    response_body = response.json()
-    session_id = response_body['sessionId']
-    return session_id
+  url = BASE_URL + '/sessions/fax'
+  headers = {
+    'Content-Type': 'application/json'
+  }
+  request_body = {
+    'faxlineId': FAXLINE_ID,
+    'recipient': recipient,
+    'filename': pdf_filename,
+    'base64Content': encoded_pdf.decode("utf-8")
+  }
+
+  response = requests.post(url,
+                           headers=headers,
+                           json=request_body,
+                           auth=authorization)
+  status_code = response.status_code
+  if not status_code == 200:
+    sys.stderr.write('An error occurred while communicating with the sipgate REST API: ')
+    sys.stderr.write('status code {} (see README for details)'.format(status_code))
+    exit(5)
+
+  response_body = response.json()
+  session_id = response_body['sessionId']
+  return session_id
 ```
 
 
@@ -153,13 +150,15 @@ while send_status in ('STARTING', 'PENDING', 'SENDING'):
 In the `poll_send_status` function we use requests again to query the `/history/{sessionId}` endpoint to get the history entry for our fax. In this case we are only interested in the `faxStatusType`.
 ```python
 def poll_send_status(session_id, authorization):
-    headers = {
-        'Content-Type': 'application/json'
-    }
-    response = requests.get('{}/history/{}'.format(config['baseUrl'], session_id), headers=headers, auth=authorization)
-    response_body = response.json()
-    return response_body['faxStatusType']
-
+  url = '{}/history/{}'.format(BASE_URL, session_id)
+  headers = {
+    'Content-Type': 'application/json'
+  }
+  response = requests.get(url,
+                          headers=headers,
+                          auth=authorization)
+  response_body = response.json()
+  return response_body['faxStatusType']
 ```
 
 The `faxStatusType` can contain the following values:
